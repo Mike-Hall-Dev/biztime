@@ -1,6 +1,7 @@
 const express = require("express");
 const ExpressError = require("../expressError")
 const router = express.Router();
+const slugify = require("slugify")
 const db = require("../db")
 
 
@@ -45,7 +46,8 @@ router.get('/:code', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const { code, name, description } = req.body;
+        let { name, description } = req.body;
+        let code = slugify(name, { lower: true })
         if (Object.keys(req.body).length !== 3) {
             throw new ExpressError("Please provide a code, name and description.", 404)
         }
